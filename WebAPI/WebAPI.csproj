@@ -6,7 +6,8 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Hubs\" />
+    <Folder Include="Data\Migrations\" />
+    <Folder Include="Options\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,6 +15,7 @@
     <PackageReference Include="Azure.Identity" Version="1.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.0" />
 	<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="5.0.0" />
+	<PackageReference Include="Twilio" Version="5.68.2" />
   </ItemGroup>
 
   <ItemGroup>
