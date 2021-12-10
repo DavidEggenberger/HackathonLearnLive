@@ -1,6 +1,25 @@
 ﻿@page "/"
+@inject NavigationManager NavigationManager
+@inject HttpClient httpClient
 
 <div class="IndexContainer">
-    <OnlineUsersComponent/>
-    <VideoChatComponent/>
+    <OnlineUsersComponent />
+    <VideoChatComponent />
 </div>
+
+@code{
+    private HubConnection hubConnection;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection = new HubConnectionBuilder()
+                .WithUrl(NavigationManager.ToAbsoluteUri("/videoChatHub"))
+                .Build();
+        StateHasChanged();
+        hubConnection.On("UpdateOnlineUsers", async () =>
+        {
+            StateHasChanged();
+        });
+        await hubConnection.StartAsync();
+    }
+}

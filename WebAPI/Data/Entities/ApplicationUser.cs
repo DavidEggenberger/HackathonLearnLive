@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace WebAPI.Data.Entities
 {
@@ -9,5 +10,6 @@ namespace WebAPI.Data.Entities
         public bool IsOnline { get; set; }
         public int TabsOpen { get; set; }
         public bool IsInCall { get; set; }
+        public List<GroupUserMembership> JoinedGroups { get; set; }
     }
 }
