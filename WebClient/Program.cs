@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using WebClient.Authentication;
 using WebClient.JSInterop;
 
 namespace WebClient
@@ -20,6 +22,7 @@ namespace WebClient
 
             builder.Services.AddScoped<VideoJS>();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddScoped<AuthenticationStateProvider, HostAuthenticationStateProvider>();
 
             await builder.Build().RunAsync();
         }

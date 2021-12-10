@@ -3,7 +3,7 @@
 @inject HttpClient httpClient
 
 <div class="IndexContainer">
-    <OnlineUsersComponent />
+    <GroupsComponent />
     <VideoChatComponent />
 </div>
 
@@ -16,7 +16,7 @@
                 .WithUrl(NavigationManager.ToAbsoluteUri("/videoChatHub"))
                 .Build();
         StateHasChanged();
-        hubConnection.On("UpdateOnlineUsers", async () =>
+        hubConnection.On("UpdateGroups", async () =>
         {
             StateHasChanged();
         });

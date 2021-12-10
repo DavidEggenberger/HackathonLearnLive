@@ -1,11 +1,20 @@
 ﻿@inherits LayoutComponentBase
+@inject AuthenticationStateProvider authProvider
 
 <div class="page">
     <nav>
         <h1>LearnLive!</h1>
-        <div>
-
-        </div>
+        <AuthorizeView>
+            <Authorized>
+                <div class="LogoutSection">
+                    <h3>Welcome to the Clan @context.User.Identity.Name</h3>
+                    <h3 @onclick="() => ((HostAuthenticationStateProvider)authProvider).SignOut()" style="cursor: pointer; margin-left: 15px;" class="underscore">Logout</h3>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <h3 class="underscore" @onclick="() => ((HostAuthenticationStateProvider)authProvider).SignIn()" style="cursor: pointer;">Join the Clan</h3>
+            </NotAuthorized>
+        </AuthorizeView>
     </nav>
     <main>
         @Body

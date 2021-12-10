@@ -11,5 +11,6 @@ namespace WebAPI.Data.Entities
         public int TabsOpen { get; set; }
         public bool IsInCall { get; set; }
         public List<GroupUserMembership> JoinedGroups { get; set; }
+        public List<GroupMessage> SentMessages { get; set; }
     }
 }

@@ -10,5 +10,6 @@ namespace DTOs
     {
         public const string LoginPath = "/Login";
         public const string LogoutPath = "/User/Logout";
+        public const string UserClaimsPath = "/User/BFFUser";
     }
 }

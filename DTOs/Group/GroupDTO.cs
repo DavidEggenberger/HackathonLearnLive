@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DTOs.Twilio
+namespace DTOs.Group
 {
-    public class TwilioJWTDTO
+    public class GroupDTO
     {
-        public string Token { get; set; }
     }
 }

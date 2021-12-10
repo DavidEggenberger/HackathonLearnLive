@@ -12,5 +12,6 @@ namespace WebAPI.Data.Entities
         public string Purpose { get; set; }
         public string PictureURI { get; set; }
         public List<GroupUserMembership> JoinedUsers { get; set; }
+        public List<GroupMessage> Messages { get; set; }
     }
 }

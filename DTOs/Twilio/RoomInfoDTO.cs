@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace DTOs.Twilio
 {
-    public class TwilioJWTDTO
+    public class RoomInfoDTO
     {
-        public string Token { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public int Participants { get; set; }
     }
 }
