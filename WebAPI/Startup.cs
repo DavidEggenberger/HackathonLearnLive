@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,6 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAPI.Data;
+using WebAPI.Hubs;
 
 namespace WebAPI
 {
@@ -25,7 +28,12 @@ namespace WebAPI
         {
             services.AddRazorPages();
             services.AddControllers();
-            
+            services.AddSignalR();
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration["AzureKeyVaultAzureSQLConnection"]);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +60,8 @@ namespace WebAPI
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<VideoChatHub>("/videoChatHub");
+                endpoints.MapControllers();
                 endpoints.MapRazorPages();
                 endpoints.MapFallbackToPage("/_Host");
             });

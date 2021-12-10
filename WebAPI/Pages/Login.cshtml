@@ -1,0 +1,22 @@
+﻿@page
+@model WebAPI.Pages.LoginModel
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+}
+
+<div class="LoginForm">
+    <main>
+        <h3>Choose a social log-in:</h3>
+        @{
+            var providers = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            <form asp-route-returnurl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                <div>
+                    @foreach (var provider in providers)
+                    {
+                        <button class="socialLoginButton" type="submit" value="@provider.Name" name="provider">@provider.Name</button>
+                    }
+                </div>
+            </form>
+        }
+    </main>
+</div>
