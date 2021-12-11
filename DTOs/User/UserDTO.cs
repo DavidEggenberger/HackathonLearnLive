@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DTOs.User
 {
-    public class OnlineUserDTO
+    public class UserDTO
     {
         public string Id { get; set; }
         public string Name { get; set; }

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebAPI.Data.Entities
 {
-    public class GroupUserMembership
+    public class ApplicationUserGroupMembership
     {
         public Guid Id { get; set; }
         public string ApplicationUserId { get; set; }

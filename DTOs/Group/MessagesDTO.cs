@@ -8,5 +8,9 @@ namespace DTOs.Group
 {
     public class MessagesDTO
     {
+        public Guid Id { get; set; }
+        public Guid GroupId { get; set; }
+        public string Content { get; set; }
+        public string SenderUserName { get; set; }
     }
 }

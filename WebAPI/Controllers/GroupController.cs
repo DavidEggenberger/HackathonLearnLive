@@ -1,4 +1,5 @@
 ﻿using DTOs.Group;
+using DTOs.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +56,7 @@ namespace WebAPI.Controllers
             {
                 Name = group.Name,
                 Id = group.Id,
-                MembersId = group.ApplicationUsersInGroup.Select(s => s.ApplicationUserId).ToList(),
+                MemberUsers = group.ApplicationUsersInGroup.Select(s => new UserDTO { Id = s.ApplicationUserId }).ToList(),
                 CreatorId = group.CreatorApplicationUserId
             }).ToList();
         }
@@ -66,7 +67,7 @@ namespace WebAPI.Controllers
             ApplicationUser appUser = await userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             if (!group.ApplicationUsersInGroup.Select(s => s.ApplicationUserId).Contains(appUser.Id))
             {
-                group.ApplicationUsersInGroup.Add(new GroupUserMembership
+                group.ApplicationUsersInGroup.Add(new ApplicationUserGroupMembership
                 {
                     ApplicationUser = appUser
                 });
@@ -81,7 +82,7 @@ namespace WebAPI.Controllers
             ApplicationUser appUser = await userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             if (group.ApplicationUsersInGroup.Select(s => s.ApplicationUserId).Contains(appUser.Id))
             {
-                GroupUserMembership applicationUserGroupMembership = group.ApplicationUsersInGroup.Where(s => s.ApplicationUserId == appUser.Id).First();
+                ApplicationUserGroupMembership applicationUserGroupMembership = group.ApplicationUsersInGroup.Where(s => s.ApplicationUserId == appUser.Id).First();
                 group.ApplicationUsersInGroup.Remove(applicationUserGroupMembership);
                 await applicationDbContext.SaveChangesAsync();
             }
@@ -108,7 +109,7 @@ namespace WebAPI.Controllers
                 GroupId = group.Id,
                 Id = message.Id,
                 Content = message.Text,
-                SenderUserName = message.ApplicationUser.UserName
+                SenderUserName = message.SenderApplicationUser.UserName
             }).ToList();
         }
     }
