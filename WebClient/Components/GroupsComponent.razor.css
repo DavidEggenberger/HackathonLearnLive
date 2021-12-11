@@ -3,7 +3,7 @@
     height: 100%;
     box-sizing: border-box;
     display: grid;
-    grid-template-rows: 50px 1fr;
+    grid-template-rows: 30px 1fr;
 }
 .DisplayGroupSection{
     display: flex;
@@ -13,5 +13,19 @@
     margin-right: 10px;
 }
 img{
-    max-height: 160px;
+    width: 220px;
+    height: 130px;
+}
+.GroupHeader{
+    padding: 3px;
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.3);
+    display: grid;
+    place-content: center;
+    width: 80%;
+}
+.MainSection{
+    padding-top: 10px;
+    box-sizing: border-box;
 }

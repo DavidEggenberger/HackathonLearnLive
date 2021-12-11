@@ -2,11 +2,18 @@
 @inject VideoJS videoJS
 @inject NavigationManager navigationManager
 
-<div>
-    <h3>Selected group: @GroupDTO?.Id</h3>
-    <CameraSelectorComponent CameraChanged="camera => activeCamera = camera"/>
-
-    <div style="height: 400px;" id="camera"></div>
+<div class="VideoChatComponentContainer">
+    <h3>@GroupDTO?.Name</h3>
+    <CameraSelectorComponent CameraChanged="camera => activeCamera = camera" />
+    @if (!isVideoChatting)
+    {
+        <button @onclick="async () => await TryJoinRoomAsync(GroupDTO.Id)">Join Video Chat</button>
+    }
+    else
+    {
+        <button @onclick="async () => await OnLeaveRoom()">Leave Video Chat</button>
+    }
+    <div id="camera"></div>
 </div>
 
 
@@ -15,6 +22,7 @@
     public GroupDTO GroupDTO { get; set; }
     private List<MessagesDTO> messagesDTOs;
     private string activeCamera;
+    private bool isVideoChatting;
     protected override async Task OnParametersSetAsync()
     {
         await GetMessagesLearningNotes();
@@ -22,7 +30,7 @@
 
     public async Task GetMessagesLearningNotes()
     {
-        messagesDTOs = await httpClient.GetFromJsonAsync<List<MessagesDTO>>($"/api/group/MessagesForGroup/{GroupDTO?.Id}");
+        //messagesDTOs = await httpClient.GetFromJsonAsync<List<MessagesDTO>>($"/api/group/MessagesForGroup/{GroupDTO?.Id}");
     }
 
     private async ValueTask OnLeaveRoom()
@@ -31,23 +39,18 @@
         await videoJS.StartVideoAsync(activeCamera, "#camera");
     }
 
-    private async ValueTask<bool> TryJoinRoom(string roomName)
+    private async ValueTask<bool> TryJoinRoomAsync(object roomName)
     {
-        if (roomName is null || roomName is { Length: 0 })
-        {
-            return false;
-        }
-
         var jwt = await httpClient.GetFromJsonAsync<TwilioJWTDTO>("api/twilio/token");
         if (jwt?.Token is null)
         {
             return false;
         }
 
-        var joined = await videoJS.CreateOrJoinRoomAsync(roomName, jwt.Token);
+        var joined = await videoJS.CreateOrJoinRoomAsync(roomName.ToString(), jwt.Token);
         if (joined)
         {
-
+            isVideoChatting = true;
         }
 
         return joined;

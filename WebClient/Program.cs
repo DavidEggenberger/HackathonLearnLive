@@ -29,7 +29,6 @@ namespace WebClient
             {
                 options.DefaultPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
             });
-            builder.Services.AddBlazoredModal();
 
             await builder.Build().RunAsync();
         }

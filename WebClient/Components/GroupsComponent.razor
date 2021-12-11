@@ -16,8 +16,8 @@
                 {
                     <div class="group">
                         <h3>@group.Name</h3>
+                        <img src="@group.PictureURI" />
                         <h5>@group.Purpose</h5>
-                        <img src="@group.PictureURI"/>
                         <div style="width: 100%; display: grid; place-content: center;">
                             <button @onclick="() => ChosenGroup.InvokeAsync(group)">Select Group</button>
                         </div>

@@ -1,2 +1,8 @@
-﻿body {
+﻿.VideoChatComponentContainer{
+    padding-left: 20px;
+    box-sizing: border-box;
+}
+#camera video{
+    height: 200px;
+    width: 200px;
 }
