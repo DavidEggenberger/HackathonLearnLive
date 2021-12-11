@@ -3,13 +3,13 @@
 @inject HttpClient httpClient
 
 <div class="IndexContainer">
-    <GroupsComponent />
-    <VideoChatComponent />
+    <GroupsComponent ChosenGroup="group => currentlyChosenGroup = group"/>
+    <VideoChatComponent GroupDTO="currentlyChosenGroup"/>
 </div>
 
 @code{
     private HubConnection hubConnection;
-
+    private GroupDTO currentlyChosenGroup;
     protected override async Task OnInitializedAsync()
     {
         hubConnection = new HubConnectionBuilder()

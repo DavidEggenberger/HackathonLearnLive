@@ -56,6 +56,8 @@ namespace WebAPI.Controllers
             {
                 Name = group.Name,
                 Id = group.Id,
+                Purpose = group.Purpose,
+                PictureURI = group.PictureURI,
                 MemberUsers = group.ApplicationUsersInGroup.Select(s => new UserDTO { Id = s.ApplicationUserId }).ToList(),
                 CreatorId = group.CreatorApplicationUserId
             }).ToList();

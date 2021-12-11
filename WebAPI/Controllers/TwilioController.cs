@@ -16,7 +16,7 @@ using WebAPI.Twilio;
 namespace WebAPI.Controllers
 {
     [Authorize]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class TwilioController : ControllerBase
     {
@@ -31,9 +31,6 @@ namespace WebAPI.Controllers
         [HttpGet("token")]
         public async Task<TwilioJWTDTO> GetToken()
         {
-
-
-
             return new TwilioJWTDTO
             {
                 Token = new Token(

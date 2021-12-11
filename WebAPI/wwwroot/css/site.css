@@ -13,12 +13,20 @@
 	height: 100vh;
 }
 nav{
-	padding: 20px;
+	padding: 20px 20px 0 20px;
 	height: 60px;
 	display: flex;
 	justify-content: space-between;
+	align-items: flex-end;
 }
 main{
 	height: calc(100% - 60px);
 	padding: 20px;
+}
+img.logo {
+	margin-left: 5px;
+	height: 34px;
+}
+h1 {
+	font-size: 34px;
 }

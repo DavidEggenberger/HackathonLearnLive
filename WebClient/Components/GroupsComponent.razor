@@ -1,3 +1,47 @@
-﻿<div class="OnlineUsersComponentContainer">
+﻿@inject HttpClient httpClient
 
+
+<div class="OnlineUsersComponentContainer">
+    <div class="GroupHeader">
+        <h3>Explore the learning groups</h3>
+        <div>
+
+        </div>
+    </div>
+    <div class="MainSection">
+        <div class="DisplayGroupSection">
+            @if (groups?.Count > 0)
+            {
+                foreach (var group in groups)
+                {
+                    <div class="group">
+                        <h3>@group.Name</h3>
+                        <h5>@group.Purpose</h5>
+                        <img src="@group.PictureURI"/>
+                        <div style="width: 100%; display: grid; place-content: center;">
+                            <button @onclick="() => ChosenGroup.InvokeAsync(group)">Select Group</button>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="ManageGroupSection">
+            <div>
+                
+            </div>
+        </div>
+    </div>
 </div>
+
+
+@code{
+    [Parameter]
+    public EventCallback<GroupDTO> ChosenGroup { get; set; }
+
+    private List<GroupDTO> groups;
+    protected override async Task OnInitializedAsync()
+    {
+        groups = await httpClient.GetFromJsonAsync<List<GroupDTO>>("/api/group/GetAllGroups");
+        StateHasChanged();
+    }
+}

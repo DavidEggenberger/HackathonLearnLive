@@ -12,6 +12,8 @@ namespace DTOs.Group
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string CreatorId { get; set; }
+        public string Purpose { get; set; }
+        public string PictureURI { get; set; }
         public List<UserDTO> MemberUsers { get; set; }
     }
 }
