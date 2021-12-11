@@ -3,16 +3,19 @@
 
 <div class="page">
     <nav>
-        <h1>LearnLive!</h1>
+        <div style="display: flex;">
+            <h1>LearnLive!</h1>
+            <img src="/icons/live.png"/>
+        </div>  
         <AuthorizeView>
             <Authorized>
-                <div class="LogoutSection">
+                <div style="display: flex;">
                     <h3>Welcome to the Clan @context.User.Identity.Name</h3>
-                    <h3 @onclick="() => ((HostAuthenticationStateProvider)authProvider).SignOut()" style="cursor: pointer; margin-left: 15px;" class="underscore">Logout</h3>
+                    <h3 @onclick="() => ((HostAuthenticationStateProvider)authProvider).SignOut()" style="cursor: pointer; margin-left: 15px;" class="underline">Logout</h3>
                 </div>
             </Authorized>
             <NotAuthorized>
-                <h3 class="underscore" @onclick="() => ((HostAuthenticationStateProvider)authProvider).SignIn()" style="cursor: pointer;">Join the Clan</h3>
+                <h3 class="underline" @onclick="() => ((HostAuthenticationStateProvider)authProvider).SignIn()" style="cursor: pointer;">SignUp</h3>
             </NotAuthorized>
         </AuthorizeView>
     </nav>

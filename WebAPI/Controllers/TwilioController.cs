@@ -10,6 +10,7 @@ using Twilio.Base;
 using Twilio.Jwt.AccessToken;
 using Twilio.Rest.Video.V1;
 using Twilio.Rest.Video.V1.Room;
+using WebAPI.Data;
 using WebAPI.Twilio;
 
 namespace WebAPI.Controllers
@@ -20,9 +21,11 @@ namespace WebAPI.Controllers
     public class TwilioController : ControllerBase
     {
         private TwilioOptions twilioOptions;
-        public TwilioController(Microsoft.Extensions.Options.IOptions<TwilioOptions> twilioOptions)
+        private ApplicationDbContext applicationDbContext;
+        public TwilioController(Microsoft.Extensions.Options.IOptions<TwilioOptions> twilioOptions, ApplicationDbContext applicationDbContext)
         {
             this.twilioOptions = twilioOptions.Value;
+            this.applicationDbContext = applicationDbContext;
         }
 
         [HttpGet("token")]

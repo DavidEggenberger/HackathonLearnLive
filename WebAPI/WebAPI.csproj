@@ -26,4 +26,8 @@
     <ProjectReference Include="..\WebClient\WebClient.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\icons\live.png" />
+  </ItemGroup>
+
 </Project>
