@@ -15,7 +15,6 @@ using WebAPI.Twilio;
 
 namespace WebAPI.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class TwilioController : ControllerBase
@@ -37,7 +36,7 @@ namespace WebAPI.Controllers
                     twilioOptions.AccountSid,
                     twilioOptions.ApiKey,
                     twilioOptions.ApiSecret,
-                    identity: User.Identity.Name,
+                    identity: User.Identity.Name ?? Guid.NewGuid().ToString(),
                     grants: new HashSet<IGrant> { new VideoGrant() })
                 .ToJwt()
             };

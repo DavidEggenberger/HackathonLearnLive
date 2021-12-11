@@ -12,10 +12,14 @@
                 foreach (var group in groups)
                 {
                     <div class="group">
-                        <h3>@group.Name</h3>
-                        <img src="@group.PictureURI" />
-                        <h5>@group.Purpose</h5>
-                        <h5>Currently online users: @group.OnlineUsers</h5>
+                        <div style="width: 100%; display: grid; place-content: center;">
+                            <h3>@group.Name</h3>
+                        </div>
+                        <div style="width: 100%; display: grid; place-content: center;">
+                            <img src="@group.PictureURI" />
+                        </div>
+                        <h5 style="margin-top: 4px;">@group.Purpose</h5>
+                        <h5 style="margin-top: 4px;">Currently online users: @group.OnlineUsers</h5>
                         <div style="width: 100%; display: grid; place-content: center;">
                             <button @onclick="() => ChosenGroup.InvokeAsync(group)">Select Group</button>
                         </div>

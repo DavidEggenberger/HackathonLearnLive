@@ -7,7 +7,7 @@
     <CameraSelectorComponent CameraChanged="camera => activeCamera = camera" />
     @if (!isVideoChatting)
     {
-        <button @onclick="async () => await TryJoinRoomAsync(GroupDTO.Id)">Join Video Chat</button>
+        <button @onclick="async () => await TryJoinRoomAsync(GroupDTO.Id.ToString())">Join Video Chat</button>
     }
     else
     {
@@ -25,7 +25,10 @@
     private bool isVideoChatting;
     protected override async Task OnParametersSetAsync()
     {
-        await GetMessagesLearningNotes();
+        if(GroupDTO != null)
+        {
+            await GetMessagesLearningNotes();
+        }
     }
 
     public async Task GetMessagesLearningNotes()
@@ -39,7 +42,7 @@
         await videoJS.StartVideoAsync(activeCamera, "#camera");
     }
 
-    private async ValueTask<bool> TryJoinRoomAsync(object roomName)
+    private async ValueTask<bool> TryJoinRoomAsync(string roomName)
     {
         var jwt = await httpClient.GetFromJsonAsync<TwilioJWTDTO>("api/twilio/token");
         if (jwt?.Token is null)
@@ -47,7 +50,7 @@
             return false;
         }
 
-        var joined = await videoJS.CreateOrJoinRoomAsync(roomName.ToString(), jwt.Token);
+        var joined = await videoJS.CreateOrJoinRoomAsync(roomName, jwt.Token);
         if (joined)
         {
             isVideoChatting = true;

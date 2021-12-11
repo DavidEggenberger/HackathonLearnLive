@@ -20,8 +20,13 @@ namespace WebAPI
 
             using IServiceScope serviceScope = host.Services.CreateScope();
             ApplicationDbContext appDbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            if (appDbContext.Groups.Count() == 2)
+            if (appDbContext.Groups.Count() != 2)
             {
+                foreach (var item in appDbContext.Groups)
+                {
+                    appDbContext.Groups.Remove(item);
+                }
+                await appDbContext.SaveChangesAsync();
                 appDbContext.Groups.Add(new Data.Entities.Group
                 {
                     Name = "DevOps Learning Group",

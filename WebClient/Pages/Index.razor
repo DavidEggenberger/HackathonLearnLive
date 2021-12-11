@@ -2,7 +2,7 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient httpClient
 
-<CascadingValue Value="this">
+<CascadingValue Value="hubConnection">
     <div class="IndexContainer">
         <GroupsComponent ChosenGroup="group => currentlyChosenGroup = group" />
         <VideoChatComponent GroupDTO="currentlyChosenGroup" />

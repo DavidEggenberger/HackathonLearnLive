@@ -104,21 +104,14 @@ namespace WebAPI.Controllers
             return Ok();
         }
         [HttpGet("MessagesForGroup/{groupId}")]
-        public async Task<List<ChatItemDTO>> GetMessagesPerGroup(Guid groupId)
+        public async Task<List<MessagesDTO>> GetMessagesPerGroup(Guid groupId)
         {
             Group group = applicationDbContext.Groups.Include(s => s.Messages).ThenInclude(t => t.SenderApplicationUser).Where(group => group.Id == groupId).First();
-            var messages = group.Messages.ToList();
-            var learningNotes = group.LearningNotes.ToList();
-            var chatItems = messages.Select(s => new ChatItemDTO
+            return group.Messages.Select(m => new MessagesDTO
             {
-                
-
+                Id = m.Id,
+                Content = m.TextMessage
             }).ToList();
-            chatItems.AddRange(learningNotes.Select(s => new ChatItemDTO
-            {
-
-            }).ToList());
-            return chatItems;
         }
     }
 }

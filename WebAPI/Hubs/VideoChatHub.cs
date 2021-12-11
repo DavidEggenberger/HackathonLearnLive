@@ -67,7 +67,7 @@ namespace WebAPI.Hubs
             group.Messages.Add(new GroupMessage
             {
                 SenderApplicationUser = appUser,
-                Text = messageDTO.Content,
+                TextMessage = messageDTO.Content,
                 CreatedAt = DateTime.Now
             });
             await applicationDbContext.SaveChangesAsync();
