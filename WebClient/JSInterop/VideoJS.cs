@@ -22,5 +22,20 @@ namespace WebClient.JSInterop
                 "startVideo",
                 deviceId, selector) ?? new ValueTask();
         }
+
+        public ValueTask<bool> CreateOrJoinRoomAsync(
+            string roomName,
+            string token)
+        {
+            return jsRuntime?.InvokeAsync<bool>(
+                "createOrJoinRoom",
+                roomName, token) ?? new ValueTask<bool>(false);
+        }
+
+        public ValueTask LeaveRoomAsync()
+        {
+            return jsRuntime?.InvokeVoidAsync(
+                "leaveRoom") ?? new ValueTask();
+        }
     }
 }
