@@ -30,7 +30,7 @@
 
     public async Task GetMessagesLearningNotes()
     {
-        //messagesDTOs = await httpClient.GetFromJsonAsync<List<MessagesDTO>>($"/api/group/MessagesForGroup/{GroupDTO?.Id}");
+        messagesDTOs = await httpClient.GetFromJsonAsync<List<MessagesDTO>>($"/api/group/MessagesForGroup/{GroupDTO?.Id}");
     }
 
     private async ValueTask OnLeaveRoom()

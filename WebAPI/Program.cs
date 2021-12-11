@@ -20,19 +20,33 @@ namespace WebAPI
 
             using IServiceScope serviceScope = host.Services.CreateScope();
             ApplicationDbContext appDbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            if (appDbContext.Groups.Count() < 2)
+            if (appDbContext.Groups.Count() == 2)
             {
                 appDbContext.Groups.Add(new Data.Entities.Group
                 {
                     Name = "DevOps Learning Group",
                     PictureURI = "https://th.bing.com/th/id/R.4bb4ef273cf791b36d347f171d41ddce?rik=6QClw6AaWcUzmQ&pid=ImgRaw&r=0",
-                    Purpose = "Come and learn about DevOps with us!"
+                    Purpose = "Come and learn about DevOps with us!",
+                    Messages = new List<Data.Entities.GroupMessage>
+                    {
+                        new Data.Entities.GroupMessage
+                        {
+                            TextMessage = "Welcome to the DevOps LearningGroup"
+                        }
+                    }
                 });
                 appDbContext.Groups.Add(new Data.Entities.Group
                 {
                     Name = "CSS Tricks Group",
                     PictureURI = "https://3wa.fr/wp-content/uploads/2020/04/logo-css.png",
-                    Purpose = "Share your CSS Tricks!"
+                    Purpose = "Share your CSS Tricks!",
+                    Messages = new List<Data.Entities.GroupMessage>
+                    {
+                        new Data.Entities.GroupMessage
+                        {
+                            TextMessage = "Welcome to the CSS Tricks Group"
+                        }
+                    }
                 });
                 await appDbContext.SaveChangesAsync();
             }

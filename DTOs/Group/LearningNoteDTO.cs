@@ -10,5 +10,6 @@ namespace DTOs.Group
     {
         public Guid Id { get; set; }
         public Guid GroupId { get; set; }
+        public string Message { get; set; }
     }
 }

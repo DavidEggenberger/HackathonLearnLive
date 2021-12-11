@@ -5,6 +5,7 @@ namespace WebAPI.Data.Entities
 {
     public class ApplicationUser : IdentityUser
     {
+        public bool MobilePushNotifications { get; set; }
         public string MobileNumber { get; set; }
         public string PictureURI { get; set; }
         public bool IsOnline { get; set; }

@@ -141,7 +141,6 @@ function attachTrack(track) {
             const responsiveDiv = document.createElement('div');
             responsiveDiv.id = track.sid;
             responsiveDiv.classList.add('embed-responsive');
-            responsiveDiv.classList.add('embed-responsive-16by9');
 
             const responsiveItem = document.createElement('div');
             responsiveItem.classList.add('embed-responsive-item');

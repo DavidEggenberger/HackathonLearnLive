@@ -11,6 +11,14 @@
 .group{
     display: block;
     margin-right: 10px;
+    border-radius: 5px;
+    padding: 5px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: 0.3s;
+}
+.group:hover{
+        background-color: rgba(255, 255, 255, 0.5);
 }
 img{
     width: 220px;

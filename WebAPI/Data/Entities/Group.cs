@@ -12,8 +12,8 @@ namespace WebAPI.Data.Entities
         public string Purpose { get; set; }
         public string PictureURI { get; set; }
         public string CreatorApplicationUserId { get; set; }
-        public List<LearningNote> LearningNotes { get; set; }
         public List<ApplicationUserGroupMembership> ApplicationUsersInGroup { get; set; }
         public List<GroupMessage> Messages { get; set; }
+        public List<LearningNote> LearningNotes { get; set; }
     }
 }

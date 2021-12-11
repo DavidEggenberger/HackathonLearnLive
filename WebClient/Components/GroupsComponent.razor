@@ -4,9 +4,6 @@
 <div class="OnlineUsersComponentContainer">
     <div class="GroupHeader">
         <h3>Explore the learning groups</h3>
-        <div>
-
-        </div>
     </div>
     <div class="MainSection">
         <div class="DisplayGroupSection">
@@ -18,6 +15,7 @@
                         <h3>@group.Name</h3>
                         <img src="@group.PictureURI" />
                         <h5>@group.Purpose</h5>
+                        <h5>Currently online users: @group.OnlineUsers</h5>
                         <div style="width: 100%; display: grid; place-content: center;">
                             <button @onclick="() => ChosenGroup.InvokeAsync(group)">Select Group</button>
                         </div>
