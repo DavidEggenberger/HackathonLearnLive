@@ -20,7 +20,7 @@ namespace WebAPI
 
             using IServiceScope serviceScope = host.Services.CreateScope();
             ApplicationDbContext appDbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            if (appDbContext.Groups.Count() != 2)
+            if (appDbContext.Groups.Count() != 1)
             {
                 foreach (var item in appDbContext.Groups)
                 {
@@ -50,6 +50,19 @@ namespace WebAPI
                         new Data.Entities.GroupMessage
                         {
                             TextMessage = "Welcome to the CSS Tricks Group"
+                        }
+                    }
+                });
+                appDbContext.Groups.Add(new Data.Entities.Group
+                {
+                    Name = "C# Group",
+                    PictureURI = "https://escuela.it/uploads/c-sharp-92.png",
+                    Purpose = "Let's learn about C#!",
+                    Messages = new List<Data.Entities.GroupMessage>
+                    {
+                        new Data.Entities.GroupMessage
+                        {
+                            TextMessage = "Welcome to the C# Group"
                         }
                     }
                 });

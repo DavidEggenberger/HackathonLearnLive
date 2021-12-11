@@ -1,21 +1,22 @@
-﻿
-@if (HasCameras)
-{
-    foreach (var device in Cameras)
+﻿<select @onchange="async(value) => await SelectCamera((string)value.Value)">
+    @if (HasCameras)
     {
-        <a href="#" class="dropdown-item @(_activeCamera == device.DeviceId ? "active" : "")"
-           id="@device.DeviceId"
-           @onclick="@(async () => await SelectCamera(device.DeviceId))">
-            @device.Label
-        </a>
+        <option>Select a camera</option>
+        foreach (var device in Cameras)
+        {
+            <option value="@device.DeviceId">@device.Label</option>
+        }
     }
-}
-            else
-            {
-                <h3>Add a camera to start video chatting</h3>
-            }
+    else
+    {
+        <option>Add a camera to start video chatting</option>
+    }
+</select>
 
-@code {
+
+@code{
+    public string DeviceId { get; set; }
+
     [Inject]
     public VideoJS VideoJS { get; set; }
     [Parameter]
@@ -39,6 +40,9 @@
     public async Task GetVideoDevicesAsync()
     {
         Cameras = await VideoJS.GetVideoDevicesAsync();
+        State = Cameras?.Length > 0
+                ? CameraDeviceState.FoundCameras
+                : CameraDeviceState.Error;
     }
 
     protected async ValueTask SelectCamera(string deviceId)

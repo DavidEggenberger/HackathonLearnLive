@@ -2,8 +2,26 @@
 @inject VideoJS videoJS
 @inject NavigationManager navigationManager
 
+<style>
+    #camera{
+        position: relative;
+    }
+    #camera video{
+        height: 200px;
+        width: 200px;
+    }
+</style>
+
+
 <div class="VideoChatComponentContainer">
-    <h3>@GroupDTO?.Name</h3>
+    @if (GroupDTO == null)
+    {
+        <h3>Please select a learning Group</h3>
+    }
+    else
+    {
+        <h3>@GroupDTO.Name</h3>
+    }
     <CameraSelectorComponent CameraChanged="camera => activeCamera = camera" />
     @if (!isVideoChatting)
     {
@@ -13,7 +31,10 @@
     {
         <button @onclick="async () => await OnLeaveRoom()">Leave Video Chat</button>
     }
-    <div id="camera"></div>
+    <div id="camera">
+        <div></div>
+    </div>
+    <div id="participants"></div>
 </div>
 
 
