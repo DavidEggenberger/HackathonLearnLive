@@ -2,10 +2,13 @@
 @inject NavigationManager NavigationManager
 @inject HttpClient httpClient
 
-<div class="IndexContainer">
-    <GroupsComponent ChosenGroup="group => currentlyChosenGroup = group"/>
-    <VideoChatComponent GroupDTO="currentlyChosenGroup"/>
-</div>
+<CascadingValue Value="this">
+    <div class="IndexContainer">
+        <GroupsComponent ChosenGroup="group => currentlyChosenGroup = group" />
+        <VideoChatComponent GroupDTO="currentlyChosenGroup" />
+    </div>
+</CascadingValue>
+
 
 @code{
     private HubConnection hubConnection;
@@ -16,10 +19,6 @@
                 .WithUrl(NavigationManager.ToAbsoluteUri("/videoChatHub"))
                 .Build();
         StateHasChanged();
-        hubConnection.On("UpdateGroups", async () =>
-        {
-            StateHasChanged();
-        });
         await hubConnection.StartAsync();
     }
 }

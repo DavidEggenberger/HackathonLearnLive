@@ -37,11 +37,19 @@
 @code{
     [Parameter]
     public EventCallback<GroupDTO> ChosenGroup { get; set; }
+    [CascadingParameter]
+    public HubConnection hubConnection { get; set; }
 
     private List<GroupDTO> groups;
     protected override async Task OnInitializedAsync()
     {
         groups = await httpClient.GetFromJsonAsync<List<GroupDTO>>("/api/group/GetAllGroups");
         StateHasChanged();
+
+        hubConnection.On("UpdateGroups", async () =>
+        {
+            groups = await httpClient.GetFromJsonAsync<List<GroupDTO>>("/api/group/GetAllGroups");
+            StateHasChanged();
+        });
     }
 }

@@ -52,10 +52,11 @@ namespace WebAPI.Controllers
         [HttpGet("GetAllGroups")]
         public async Task<List<GroupDTO>> GetAllGroups()
         {
-            return applicationDbContext.Groups.Include(group => group.ApplicationUsersInGroup).Select(group => new GroupDTO
+            return applicationDbContext.Groups.Include(group => group.ApplicationUsersInGroup).ThenInclude(s => s.ApplicationUser).Select(group => new GroupDTO
             {
                 Name = group.Name,
                 Id = group.Id,
+                OnlineUsers = group.ApplicationUsersInGroup.Where(user => user.ApplicationUser.IsOnline).Count(),
                 Purpose = group.Purpose,
                 PictureURI = group.PictureURI,
                 MemberUsers = group.ApplicationUsersInGroup.Select(s => new UserDTO { Id = s.ApplicationUserId }).ToList(),
