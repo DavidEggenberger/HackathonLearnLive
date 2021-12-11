@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DTOs.Group
+namespace DTOs.User
 {
-    public class LearningNoteDTO
+    public class SaveUserPhoneNumberDTO
     {
-        public Guid Id { get; set; }
-        public Guid GroupId { get; set; }
+        public string MobileNumber { get; set; }
     }
 }

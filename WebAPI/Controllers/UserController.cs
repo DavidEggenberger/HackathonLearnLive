@@ -99,6 +99,14 @@ namespace WebAPI.Controllers
                 Claims = User.Claims.Select(claim => new ClaimValueDTO { Type = claim.Type, Value = claim.Value }).ToList()
             };
         }
+        [HttpPost("SavePhoneNumber")]
+        public async Task<ActionResult> SavePhoneNumber(SaveUserPhoneNumberDTO phoneNumber)
+        {
+            ApplicationUser appUser = await userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            appUser.MobileNumber = phoneNumber.MobileNumber;
+            await userManager.UpdateAsync(appUser);
+            return Ok();
+        }
     }
 }
 

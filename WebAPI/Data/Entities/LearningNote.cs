@@ -8,5 +8,6 @@ namespace WebAPI.Data.Entities
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public string Learning { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }
