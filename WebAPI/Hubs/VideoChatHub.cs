@@ -91,7 +91,7 @@ namespace WebAPI.Hubs
             ApplicationUser appUsser = applicationDbContext.Users.Include(s => s.JoinedGroups).Include(s => s.LearningNotes).Where(uer => uer.Id == Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).First();
             Group group = applicationDbContext.Groups.Include(s => s.Messages).ThenInclude(t => t.SenderApplicationUser).Where(group => group.Id == learningNoteDTO.GroupId).First();
 
-            foreach (var appUser in applicationDbContext.Users)
+            foreach (var appUser in applicationDbContext.Users.Include(s => s.JoinedGroups).Where(s => s.JoinedGroups != null))
             {
                 if (appUser.JoinedGroups.Select(s => s.GroupId).Contains(group.Id) && appUser.MobilePushNotifications)
                 {
