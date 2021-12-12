@@ -122,10 +122,21 @@
                                         }
                                     </div>
                                 }
-                                <div>
-                                    <input @bind="learningMessage" @bind:event="oninput" />
-                                    <h3 @onclick="async() => await CreateLearningNote()" style="cursor: pointer;">Create a learning Note</h3>
+                            <div>
+                                <input @bind="learningMessage" @bind:event="oninput" />
+                                <h3 @onclick="async() => await CreateLearningNote()" style="cursor: pointer;">Create a learning Note</h3>
+
+                                <div class="groupSection" style="border: 2px solid white; padding: 3px; border-radius: 3px;">
+                                    @if (!GroupDTO.MembersId.Contains(context.User.Claims.Where(s => s.Type == ClaimTypes.NameIdentifier).First().Value))
+                                    {
+                                        <h5 style="cursor: pointer;" @onclick="async() => await JoinGroup(GroupDTO.Id)">Subscribe to push notifcations for LearningNotes</h5>
+                                    }
+                                    else
+                                    {
+                                        <h5 style="cursor: pointer;" @onclick="async() => await LeaveGroup(GroupDTO.Id)">UnSubscribe from push notifcations for LearningNotes</h5>
+                                    }
                                 </div>
+                            </div>
                             </Authorized>
                             <NotAuthorized>
                                 @if (messagesDTOs != null)
@@ -256,6 +267,19 @@
         });
         learningMessage = string.Empty;
         await GetMessagesLearningNotes();
+        StateHasChanged();
+    }
+
+    public async Task JoinGroup(Guid groupId)
+    {
+        await httpClient.GetAsync($"api/group/joingroup/{groupId}");
+        GroupDTO = await httpClient.GetFromJsonAsync<GroupDTO>($"api/group/getgroup/{groupId}");
+        StateHasChanged();
+    }
+    public async Task LeaveGroup(Guid groupId)
+    {
+        await httpClient.GetAsync($"api/group/leavegroup/{groupId}");
+        GroupDTO = await httpClient.GetFromJsonAsync<GroupDTO>($"api/group/getgroup/{groupId}");
         StateHasChanged();
     }
 }

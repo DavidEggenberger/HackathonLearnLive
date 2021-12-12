@@ -10,6 +10,7 @@ namespace DTOs.Group
     public class GroupDTO
     {
         public Guid Id { get; set; }
+        public List<string> MembersId { get; set; }
         public int VideoChattingUsers { get; set; }
         public int OnlineUsers { get; set; }
         public string Name { get; set; }

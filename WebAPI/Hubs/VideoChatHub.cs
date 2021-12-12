@@ -1,5 +1,6 @@
 ﻿using DTOs.Group;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,6 +9,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using WebAPI.Data;
 using WebAPI.Data.Entities;
+using WebAPI.Twilioo;
 
 namespace WebAPI.Hubs
 {
@@ -15,10 +17,12 @@ namespace WebAPI.Hubs
     {
         private UserManager<ApplicationUser> userManager;
         private ApplicationDbContext applicationDbContext;
-        public VideoChatHub(UserManager<ApplicationUser> userManager, ApplicationDbContext applicationDbContext)
+        TwilioWhatsAppService twilio;
+        public VideoChatHub(UserManager<ApplicationUser> userManager, ApplicationDbContext applicationDbContext, TwilioWhatsAppService twilio)
         {
             this.userManager = userManager;
             this.applicationDbContext = applicationDbContext;
+            this.twilio = twilio;
         }
         public override async Task OnConnectedAsync()
         {
@@ -84,8 +88,14 @@ namespace WebAPI.Hubs
 
         public async Task CreateLearningNote(LearningNoteDTO learningNoteDTO)
         {
-            ApplicationUser appUser = applicationDbContext.Users.Include(s => s.LearningNotes).Where(uer => uer.Id == Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).First();
+            ApplicationUser appUser = applicationDbContext.Users.Include(s => s.JoinedGroups).Include(s => s.LearningNotes).Where(uer => uer.Id == Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).First();
             Group group = applicationDbContext.Groups.Include(s => s.Messages).ThenInclude(t => t.SenderApplicationUser).Where(group => group.Id == learningNoteDTO.GroupId).First();
+            
+            if(appUser.JoinedGroups.Select(s => s.GroupId).Contains(group.Id) && appUser.MobilePushNotifications)
+            {
+                twilio.SendMessage(learningNoteDTO.LearningMessage, appUser.MobileNumber);
+            }
+            
             appUser.LearningNotes.Add(new LearningNote
             {
                 Group = group,

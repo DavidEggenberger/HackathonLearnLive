@@ -64,9 +64,25 @@ namespace WebAPI.Controllers
                 OnlineUsers = group.ApplicationUsersInGroup.Where(user => user.ApplicationUser.IsOnline).Count(),
                 Purpose = group.Purpose,
                 PictureURI = group.PictureURI,
+                MembersId = group.ApplicationUsersInGroup.Select(s => s.ApplicationUserId).ToList(),
                 MemberUsers = group.ApplicationUsersInGroup.Select(s => new UserDTO { Id = s.ApplicationUserId }).ToList(),
                 CreatorId = group.CreatorApplicationUserId
             }).ToList();
+        }
+        [HttpGet("GetGroup/{id}")]
+        public async Task<GroupDTO> GetGroup(Guid id)
+        {
+            return applicationDbContext.Groups.Include(group => group.ApplicationUsersInGroup).ThenInclude(s => s.ApplicationUser).Where(s => s.Id == id).Select(group => new GroupDTO
+            {
+                Name = group.Name,
+                Id = group.Id,
+                OnlineUsers = group.ApplicationUsersInGroup.Where(user => user.ApplicationUser.IsOnline).Count(),
+                Purpose = group.Purpose,
+                PictureURI = group.PictureURI,
+                MembersId = group.ApplicationUsersInGroup.Select(s => s.ApplicationUserId).ToList(),
+                MemberUsers = group.ApplicationUsersInGroup.Select(s => new UserDTO { Id = s.ApplicationUserId }).ToList(),
+                CreatorId = group.CreatorApplicationUserId
+            }).First();
         }
         [HttpGet("JoinGroup/{groupId}")]
         public async Task<ActionResult> JoinGroup(Guid groupId)
