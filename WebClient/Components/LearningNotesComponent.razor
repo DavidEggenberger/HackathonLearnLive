@@ -1,5 +1,14 @@
-﻿<h3>LearningNotesComponent</h3>
+﻿@inject HttpClient httpClient
+
+<div>
+    <h3>Your Learningnotes</h3>
+</div>
+
 
 @code {
-
+    private List<LearningNoteDTO> learningNotes;
+    protected override async Task OnInitializedAsync()
+    {
+        learningNotes = await httpClient.GetFromJsonAsync<List<LearningNoteDTO>>("api/group/LearningNotesForGroup/{groupId}");
+    }
 }

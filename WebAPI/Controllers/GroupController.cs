@@ -116,5 +116,15 @@ namespace WebAPI.Controllers
                 Content = m.TextMessage
             }).ToList();
         }
+        [HttpGet("LearningNotesForGroup/{groupId}")]
+        public async Task<List<LearningNoteDTO>> LearningNotesPerGroup(Guid groupId)
+        {
+            Group group = applicationDbContext.Groups.Include(s => s.Messages).ThenInclude(t => t.SenderApplicationUser).Where(group => group.Id == groupId).First();
+            return group.LearningNotes.Select(m => new LearningNoteDTO
+            {
+                Id = m.Id,
+                LearningMessage = m.LearningText
+            }).ToList();
+        }
     }
 }

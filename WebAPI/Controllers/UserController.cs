@@ -97,6 +97,8 @@ namespace WebAPI.Controllers
                 return BFFUserInfoDTO.Anonymous;
             }
 
+            twilioService.SendMessage("Heyui", "41793454087");
+
             return new BFFUserInfoDTO()
             {
                 Claims = User.Claims.Select(claim => new ClaimValueDTO { Type = claim.Type, Value = claim.Value }).ToList()
@@ -117,7 +119,7 @@ namespace WebAPI.Controllers
             ApplicationUser appUser = await userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             return applicationDbContext.Users.Include(user => user.LearningNotes).First(s => s.Id == appUser.Id).LearningNotes.Select(s => new LearningNoteDTO
             {
-                Message = s.LearningText,
+                LearningMessage = s.LearningText,
                 GroupName = s.Group.Name
             }).ToList();
         }
