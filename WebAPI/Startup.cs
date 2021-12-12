@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 using WebAPI.Data;
 using WebAPI.Data.Entities;
 using WebAPI.Hubs;
-using WebAPI.Twilio;
+using WebAPI.Twilioo;
 
 namespace WebAPI
 {
@@ -35,7 +35,7 @@ namespace WebAPI
             services.AddRazorPages();
             services.AddControllers();
             services.AddSignalR();
-
+            services.AddScoped<TwilioWhatsAppService>();
             services.Configure<TwilioOptions>(settings =>
             {
                 settings.AccountSid = Configuration["AzureKeyVaultTwilioAccountSID"];
