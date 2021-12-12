@@ -15,10 +15,19 @@
         bottom: 5px;
         left: 5px;
     }
+    button {
+        padding: 3px;
+        border: 2px solid white;
+        outline: none;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 20px;
+    }
 </style>
 
 
-<div class="VideoChatComponentContainer">
+<div class="VideoChatComponentContainer" style="height: calc(100% - 200px);">
     @if (GroupDTO == null)
     {
         <div class="GroupHeader">
@@ -36,7 +45,11 @@
         <div style="padding-top: 10px; box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 1fr 300px;">
             <div style="height: 100%;">
                 <CameraSelectorComponent CameraChanged="camera => activeCamera = camera" />
-                @if (!isVideoChatting)
+                @if (!isVideoChatting && activeCamera == null)
+                {
+                    <button @onclick="async () => await TryJoinRoomAsync(GroupDTO.Id.ToString())">Select Camera to Join Video Chat</button>
+                }
+                else if (activeCamera != null)
                 {
                     <button @onclick="async () => await TryJoinRoomAsync(GroupDTO.Id.ToString())">Join Video Chat</button>
                 }

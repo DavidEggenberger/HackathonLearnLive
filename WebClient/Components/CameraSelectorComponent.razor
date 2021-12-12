@@ -13,20 +13,22 @@
     }
 </style>
 
-<select @onchange="async(value) => await SelectCamera((string)value.Value)">
-    @if (HasCameras)
-    {
-        <option>Select a camera</option>
-        foreach (var device in Cameras)
+<div style="margin-bottom: 10px;">
+    <select @onchange="async(value) => await SelectCamera((string)value.Value)">
+        @if (HasCameras)
         {
-            <option value="@device.DeviceId">@device.Label</option>
+            <option>Select a camera</option>
+            foreach (var device in Cameras)
+            {
+                <option value="@device.DeviceId">@device.Label</option>
+            }
         }
-    }
-    else
-    {
-        <option>Add a camera to start video chatting</option>
-    }
-</select>
+        else
+        {
+            <option>Add a camera to start video chatting</option>
+        }
+    </select>
+</div>
 
 
 @code{

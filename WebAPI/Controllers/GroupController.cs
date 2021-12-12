@@ -38,6 +38,9 @@ namespace WebAPI.Controllers
             applicationDbContext.Groups.Add(new Group
             {
                 Name = groupDTO.Name,
+                Purpose = groupDTO.Purpose,
+                PictureURI = groupDTO.PictureURI,
+                CreatorApplicationUserId = appUser.Id,
                 ApplicationUsersInGroup = new List<ApplicationUserGroupMembership>
                 {
                     new ApplicationUserGroupMembership

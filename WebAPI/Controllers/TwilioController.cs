@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Twilio.AspNet.Common;
 using Twilio.Base;
 using Twilio.Jwt.AccessToken;
 using Twilio.Rest.Video.V1;
@@ -64,6 +65,13 @@ namespace WebAPI.Controllers
             {
                 Name = room.UniqueName,
             };
+        }
+
+        [HttpPost("callback")]
+        public async Task<ActionResult> CallBack([FromServices] TwilioWhatsAppService twilioWhatsAppService, SmsRequest incomingMessage)
+        {
+            twilioWhatsAppService.SendMessage("heyu", "");
+            return Ok();
         }
     }
 }

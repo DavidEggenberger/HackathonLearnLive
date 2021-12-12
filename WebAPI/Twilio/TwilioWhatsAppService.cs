@@ -10,14 +10,14 @@ namespace WebAPI.Twilioo
         public TwilioWhatsAppService(IOptions<TwilioOptions> options)
         {
             this.options = options;
-            TwilioClient.Init(options.Value.AccountSid, "");
+            TwilioClient.Init(options.Value.AccountSid, options.Value.AuthToken);
         }
-        public void SendMessage()
+        public void SendMessage(string message, string number)
         {
-            MessageResource.Create(
-            body: "Hello there!",
+            var v = MessageResource.Create(
+            body: message,
             from: new Twilio.Types.PhoneNumber("whatsapp:+14155238886"),
-            to: new Twilio.Types.PhoneNumber("whatsapp:+15005550006"));
+            to: new Twilio.Types.PhoneNumber($"whatsapp:+{number}"));
         }
     }
 }

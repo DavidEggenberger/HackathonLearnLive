@@ -41,6 +41,7 @@ namespace WebAPI
                 settings.AccountSid = Configuration["AzureKeyVaultTwilioAccountSID"];
                 settings.ApiSecret = Configuration["AzureKeyVaultTwilioAPISecret"];
                 settings.ApiKey = Configuration["AzureKeyVaultTwilioAPIKey"];
+                settings.AuthToken = Configuration["AzureKeyVaultTwilioAuthToken"];
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -124,6 +125,7 @@ namespace WebAPI
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

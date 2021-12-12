@@ -20,7 +20,7 @@ namespace WebAPI
 
             using IServiceScope serviceScope = host.Services.CreateScope();
             ApplicationDbContext appDbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            if (appDbContext.Groups.Count() != 1)
+            if (false)
             {
                 foreach (var item in appDbContext.Groups)
                 {

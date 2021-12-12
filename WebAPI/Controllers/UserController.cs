@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using WebAPI.Data;
 using WebAPI.Data.Entities;
 using WebAPI.Hubs;
+using WebAPI.Twilioo;
 
 namespace WebAPI.Controllers
 {
@@ -34,7 +35,7 @@ namespace WebAPI.Controllers
             this.videoChatHubContext = videoChatHubContext;
         }
         [HttpGet]
-        public async Task<IActionResult> ExternalLoginCallback(string ReturnUrl = null)
+        public async Task<IActionResult> ExternalLoginCallback([FromServices] TwilioWhatsAppService twilioService, string ReturnUrl = null)
         {
             var info = await signInManager.GetExternalLoginInfoAsync();
             if (info.Principal == null)
@@ -52,7 +53,7 @@ namespace WebAPI.Controllers
                 };
 
                 var result = await userManager.CreateAsync(_user);
-
+                
                 if (result.Succeeded)
                 {
                     result = await userManager.AddLoginAsync(_user, info);
@@ -89,7 +90,7 @@ namespace WebAPI.Controllers
         }
         [HttpGet("BFFUser")]
         [AllowAnonymous]
-        public ActionResult<BFFUserInfoDTO> GetCurrentUser()
+        public ActionResult<BFFUserInfoDTO> GetCurrentUser([FromServices] TwilioWhatsAppService twilioService)
         {
             if (!User.Identity.IsAuthenticated)
             {

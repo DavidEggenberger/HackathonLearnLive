@@ -5,7 +5,7 @@
     <div class="GroupHeader">
         <h3>Explore the learning groups</h3>
     </div>
-    <div class="MainSection">
+    <div class="MainSection" style="max-height: 80%; overflow-y: auto;">
         <div class="DisplayGroupSection">
             <div class="group" style="width: 230px;">
                 <div style="width: 100%; display: grid; place-content: center;">
@@ -23,7 +23,7 @@
                 <div style="width: 100%; display: grid; place-content: center;">
                     <input @bind="imageURI" @bind:event="oninput" />
                 </div>
-                <div style="width: 100%; display: grid; place-content: center; height: 25px;">
+                <div style="width: 100%; display: grid; place-content: center; height: 25px; margin-top: 10px;">
                     <AuthorizeView>
                         <Authorized>
                             <button @onclick="async() => await CreateGroupAsync()">Create Group</button>
@@ -47,9 +47,28 @@
                         </div>
                         <h5 style="margin-top: 4px;">@group.Purpose</h5>
                         <h5 style="margin-top: 4px;">Currently online users: @group.OnlineUsers</h5>
-                        <div style="width: 100%; display: grid; place-content: center;">
-                            <button @onclick="() => ChosenGroup.InvokeAsync(group)">Select Group</button>
-                        </div>
+                        <AuthorizeView>
+                            <Authorized>
+                                @if (group.CreatorId == context.User.Claims.Where(s => s.Type == ClaimTypes.NameIdentifier).First().Value)
+                                {
+                                    <div style="width: 100%; display: flex; justify-content: space-evenly; margin-top: 5px;">
+                                        <button @onclick="() => ChosenGroup.InvokeAsync(group)">Select Group</button>
+                                        <button @onclick="async() => await DeleteGroupAsync(group.Id)">Delete Group</button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div style="width: 100%; display: grid; place-content: center; margin-top: 5px;">
+                                        <button @onclick="() => ChosenGroup.InvokeAsync(group)">Select Group</button>
+                                    </div>
+                                }
+                            </Authorized>
+                            <NotAuthorized>
+                                <div style="width: 100%; display: grid; place-content: center; margin-top: 5px;">
+                                    <button @onclick="() => ChosenGroup.InvokeAsync(group)">Select Group</button>
+                                </div>
+                            </NotAuthorized>
+                        </AuthorizeView>          
                     </div>
                 }
             }
@@ -85,5 +104,17 @@
             Name = groupname,
             PictureURI = imageURI
         });
+        groups = await httpClient.GetFromJsonAsync<List<GroupDTO>>("/api/group/GetAllGroups");
+        purpose = string.Empty;
+        groupname = string.Empty;
+        imageURI = string.Empty;
+        StateHasChanged();
+    }
+
+    public async Task DeleteGroupAsync(Guid groupId)
+    {
+        await httpClient.GetAsync($"api/group/deletegroup/{groupId}");
+        groups = await httpClient.GetFromJsonAsync<List<GroupDTO>>("/api/group/GetAllGroups");
+        StateHasChanged();
     }
 }
