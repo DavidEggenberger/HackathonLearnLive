@@ -88,15 +88,18 @@ namespace WebAPI.Hubs
 
         public async Task CreateLearningNote(LearningNoteDTO learningNoteDTO)
         {
-            ApplicationUser appUser = applicationDbContext.Users.Include(s => s.JoinedGroups).Include(s => s.LearningNotes).Where(uer => uer.Id == Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).First();
+            ApplicationUser appUsser = applicationDbContext.Users.Include(s => s.JoinedGroups).Include(s => s.LearningNotes).Where(uer => uer.Id == Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).First();
             Group group = applicationDbContext.Groups.Include(s => s.Messages).ThenInclude(t => t.SenderApplicationUser).Where(group => group.Id == learningNoteDTO.GroupId).First();
-            
-            if(appUser.JoinedGroups.Select(s => s.GroupId).Contains(group.Id) && appUser.MobilePushNotifications)
+
+            foreach (var appUser in applicationDbContext.Users)
             {
-                twilio.SendMessage(learningNoteDTO.LearningMessage, appUser.MobileNumber);
+                if (appUser.JoinedGroups.Select(s => s.GroupId).Contains(group.Id) && appUser.MobilePushNotifications)
+                {
+                    twilio.SendMessage(learningNoteDTO.LearningMessage, appUser.MobileNumber);
+                }
             }
-            
-            appUser.LearningNotes.Add(new LearningNote
+      
+            appUsser.LearningNotes.Add(new LearningNote
             {
                 Group = group,
                 LearningText = learningNoteDTO.LearningMessage
