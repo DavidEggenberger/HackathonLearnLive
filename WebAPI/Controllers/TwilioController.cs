@@ -70,7 +70,7 @@ namespace WebAPI.Controllers
         [HttpPost("callback")]
         public async Task<ActionResult> CallBack([FromServices] TwilioWhatsAppService twilioWhatsAppService)
         {
-            twilioWhatsAppService.SendMessage("heyu", "41793454087");
+            //twilioWhatsAppService.SendMessage("heyu", "41793454087");
             return Ok();
         }
     }
