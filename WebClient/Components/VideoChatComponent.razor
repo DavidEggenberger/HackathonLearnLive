@@ -3,6 +3,8 @@
 @inject NavigationManager navigationManager
 @implements IAsyncDisposable 
 @inject IJSRuntime JSRuntime
+@inject AuthenticationStateProvider authProvider
+
 <style>
     #camera{
         position: relative;
@@ -45,18 +47,25 @@
         <div style="padding-top: 10px; box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 1fr 300px;">
             <div style="height: 100%;">
                 <CameraSelectorComponent CameraChanged="camera => activeCamera = camera" />
-                @if (!isVideoChatting && activeCamera == null)
-                {
-                    <button @onclick="async () => await TryJoinRoomAsync(GroupDTO.Id.ToString())">Select Camera to Join Video Chat</button>
-                }
-                else if (activeCamera != null)
-                {
-                    <button @onclick="async () => await TryJoinRoomAsync(GroupDTO.Id.ToString())">Join Video Chat</button>
-                }
-                else
-                {
-                    <button @onclick="async () => await OnLeaveRoom()">Leave Video Chat</button>
-                }
+                    <AuthorizeView>
+                        <Authorized>
+                            @if (!isVideoChatting && activeCamera == null)
+                            {
+                                <button>Select Camera to Join Video Chat</button>
+                            }
+                            else if (activeCamera != null)
+                            {
+                                <button @onclick="async () => await TryJoinRoomAsync(GroupDTO.Id.ToString())">Join Video Chat</button>
+                            }
+                            else
+                            {
+                                <button @onclick="async () => await OnLeaveRoom()">Leave Video Chat</button>
+                            }
+                        </Authorized>
+                        <NotAuthorized>
+                            <button @onclick="() => ((HostAuthenticationStateProvider)authProvider).SignIn()"Login to join video Chat></button>
+                        </NotAuthorized>
+                    </AuthorizeView>
                 <div class="ChatContainer">
 
                 </div>
