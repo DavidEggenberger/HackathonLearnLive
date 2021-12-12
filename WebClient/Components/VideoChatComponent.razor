@@ -87,12 +87,24 @@
 
 
 @code{
+    [CascadingParameter]
+    public HubConnection hubConnection { get; set; }
     [Parameter]
     public GroupDTO GroupDTO { get; set; }
     private List<MessagesDTO> messagesDTOs;
+    private List<LearningNoteDTO> learningNoteDTOs;
     private string activeCamera;
     private bool muted;
     private bool isVideoChatting;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hubConnection.On("UpdateGroupMessages", async () =>
+        {
+            await GetMessagesLearningNotes();
+        });
+    }
+
     protected override async Task OnParametersSetAsync()
     {
         if(GroupDTO != null)
@@ -104,6 +116,8 @@
     public async Task GetMessagesLearningNotes()
     {
         messagesDTOs = await httpClient.GetFromJsonAsync<List<MessagesDTO>>($"/api/group/MessagesForGroup/{GroupDTO?.Id}");
+        learningNoteDTOs = await httpClient.GetFromJsonAsync<List<LearningNoteDTO>>($"/api/group/LearningNotesForGroup/{GroupDTO?.Id}");
+        StateHasChanged();
     }
 
     private async ValueTask OnLeaveRoom()
