@@ -37,7 +37,7 @@ namespace WebAPI.Controllers
                     twilioOptions.AccountSid,
                     twilioOptions.ApiKey,
                     twilioOptions.ApiSecret,
-                    /*identity: User.Identity.Name ??*/ Guid.NewGuid().ToString(),
+                    identity: User.Identity.Name ?? Guid.NewGuid().ToString(),
                     grants: new HashSet<IGrant> { new VideoGrant() })
                 .ToJwt()
             };

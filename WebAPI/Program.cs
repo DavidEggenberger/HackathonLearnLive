@@ -1,5 +1,6 @@
 using Azure.Identity;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,45 +28,49 @@ namespace WebAPI
                 //    appDbContext.Groups.Remove(item);
                 //}
                 //await appDbContext.SaveChangesAsync();
-                appDbContext.Groups.Add(new Data.Entities.Group
-                {
-                    Name = "DevOps Learning Group",
-                    PictureURI = "https://th.bing.com/th/id/R.4bb4ef273cf791b36d347f171d41ddce?rik=6QClw6AaWcUzmQ&pid=ImgRaw&r=0",
-                    Purpose = "Come and learn about DevOps with us!",
-                    Messages = new List<Data.Entities.GroupMessage>
-                    {
-                        new Data.Entities.GroupMessage
-                        {
-                            TextMessage = "Welcome to the DevOps LearningGroup"
-                        }
-                    }
-                });
-                appDbContext.Groups.Add(new Data.Entities.Group
-                {
-                    Name = "CSS Tricks Group",
-                    PictureURI = "https://3wa.fr/wp-content/uploads/2020/04/logo-css.png",
-                    Purpose = "Share your CSS Tricks!",
-                    Messages = new List<Data.Entities.GroupMessage>
-                    {
-                        new Data.Entities.GroupMessage
-                        {
-                            TextMessage = "Welcome to the CSS Tricks Group"
-                        }
-                    }
-                });
-                appDbContext.Groups.Add(new Data.Entities.Group
-                {
-                    Name = "C# Group",
-                    PictureURI = "https://escuela.it/uploads/c-sharp-92.png",
-                    Purpose = "Let's learn about C#!",
-                    Messages = new List<Data.Entities.GroupMessage>
-                    {
-                        new Data.Entities.GroupMessage
-                        {
-                            TextMessage = "Welcome to the C# Group"
-                        }
-                    }
-                });
+
+                var t = appDbContext.Groups.Include(s => s.LearningNotes).Where(g => g.Name.Contains("DevOps")).First().LearningNotes.Last();
+                appDbContext.Groups.Include(s => s.LearningNotes).Where(s => s.Name.Contains("DevOps")).First().LearningNotes.Remove(t);
+
+                //appDbContext.Groups.Add(new Data.Entities.Group
+                //{
+                //    Name = "DevOps Learning Group",
+                //    PictureURI = "https://th.bing.com/th/id/R.4bb4ef273cf791b36d347f171d41ddce?rik=6QClw6AaWcUzmQ&pid=ImgRaw&r=0",
+                //    Purpose = "Come and learn about DevOps with us!",
+                //    Messages = new List<Data.Entities.GroupMessage>
+                //    {
+                //        new Data.Entities.GroupMessage
+                //        {
+                //            TextMessage = "Welcome to the DevOps LearningGroup"
+                //        }
+                //    }
+                //});
+                //appDbContext.Groups.Add(new Data.Entities.Group
+                //{
+                //    Name = "CSS Tricks Group",
+                //    PictureURI = "https://3wa.fr/wp-content/uploads/2020/04/logo-css.png",
+                //    Purpose = "Share your CSS Tricks!",
+                //    Messages = new List<Data.Entities.GroupMessage>
+                //    {
+                //        new Data.Entities.GroupMessage
+                //        {
+                //            TextMessage = "Welcome to the CSS Tricks Group"
+                //        }
+                //    }
+                //});
+                //appDbContext.Groups.Add(new Data.Entities.Group
+                //{
+                //    Name = "C# Group",
+                //    PictureURI = "https://escuela.it/uploads/c-sharp-92.png",
+                //    Purpose = "Let's learn about C#!",
+                //    Messages = new List<Data.Entities.GroupMessage>
+                //    {
+                //        new Data.Entities.GroupMessage
+                //        {
+                //            TextMessage = "Welcome to the C# Group"
+                //        }
+                //    }
+                //});
                 await appDbContext.SaveChangesAsync();
             }
 
