@@ -46,7 +46,6 @@
                             <img src="@group.PictureURI" />
                         </div>
                         <h5 style="margin-top: 4px;">@group.Purpose</h5>
-                        <h5 style="margin-top: 4px;">Currently online users: @group.OnlineUsers</h5>
                         <AuthorizeView>
                             <Authorized>
                                 @if (group.CreatorId == context.User.Claims.Where(s => s.Type == ClaimTypes.NameIdentifier).First().Value)

@@ -96,9 +96,7 @@ namespace WebAPI.Controllers
             {
                 return BFFUserInfoDTO.Anonymous;
             }
-
-            twilioService.SendMessage("Heyui", "41793454087");
-
+            twilioService.SendMessage("hejo", "41793454087");
             return new BFFUserInfoDTO()
             {
                 Claims = User.Claims.Select(claim => new ClaimValueDTO { Type = claim.Type, Value = claim.Value }).ToList()

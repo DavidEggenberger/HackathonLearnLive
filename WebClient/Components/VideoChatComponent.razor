@@ -44,7 +44,7 @@
     }
     @if (GroupDTO != null)
     {
-        <div style="padding-top: 10px; box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 1fr 300px;">
+        <div style="padding-top: 10px; height: 100%; box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 1fr 300px;">
             <div style="height: 100%;">
                 <CameraSelectorComponent CameraChanged="camera => activeCamera = camera" />
                     <AuthorizeView>
@@ -53,21 +53,23 @@
                             {
                                 <button>Select Camera to Join Video Chat</button>
                             }
-                            else if (activeCamera != null)
+                            else if (activeCamera != null && isVideoChatting == false)
                             {
                                 <button @onclick="async () => await TryJoinRoomAsync(GroupDTO.Id.ToString())">Join Video Chat</button>
                             }
-                            else
+                            else if(isVideoChatting)
                             {
                                 <button @onclick="async () => await OnLeaveRoom()">Leave Video Chat</button>
                             }
                         </Authorized>
                         <NotAuthorized>
-                            <button @onclick="() => ((HostAuthenticationStateProvider)authProvider).SignIn()"Login to join video Chat></button>
+                            <button @onclick="() => ((HostAuthenticationStateProvider)authProvider).SignIn()">Login to join video Chat</button>
                         </NotAuthorized>
                     </AuthorizeView>
                 <div class="ChatContainer">
-
+                    <div style="display: grid; place-content: center;">
+                        <h3>Chat with the group members and create learning notes</h3>
+                    </div>
                 </div>
             </div>
             <div style="height: 100%;">
@@ -123,6 +125,7 @@
         if (joined)
         {
             isVideoChatting = true;
+            StateHasChanged();
         }
 
         return joined;
