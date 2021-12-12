@@ -22,11 +22,11 @@ namespace WebAPI
             ApplicationDbContext appDbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             if (false)
             {
-                foreach (var item in appDbContext.Groups)
-                {
-                    appDbContext.Groups.Remove(item);
-                }
-                await appDbContext.SaveChangesAsync();
+                //foreach (var item in appDbContext.Groups)
+                //{
+                //    appDbContext.Groups.Remove(item);
+                //}
+                //await appDbContext.SaveChangesAsync();
                 appDbContext.Groups.Add(new Data.Entities.Group
                 {
                     Name = "DevOps Learning Group",

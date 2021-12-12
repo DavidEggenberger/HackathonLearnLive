@@ -10,8 +10,15 @@
         </div>  
         <AuthorizeView>
             <Authorized>
-                <div style="display: flex;">
-                    <h3>Welcome to the Clan @context.User.Identity.Name</h3>
+                <div style="display: flex; align-items: flex-end;">
+                    <h3>Welcome @context.User.Identity.Name</h3>
+                    <div style="display: flex; align-items: flex-end;">
+                        <div style="display: flex; flex-direction: column; margin: 0 10px;">
+                            <label>Enter your PhoneNumber to be notified:</label>
+                            <input @bind="number" @bind:event="oninput" />
+                        </div>           
+                        <button style="background-color: rgba(255, 255, 255, 0.3); border: 2px solid white; border-radius: 5px; padding: 3px; color: white;" @onclick="async() => SavePhoneNumber()">Save Phone Number</button>
+                    </div>
                     <h3 @onclick="() => ((HostAuthenticationStateProvider)authProvider).SignOut()" style="cursor: pointer; margin-left: 15px;" class="underline">Logout</h3>
                 </div>
             </Authorized>
@@ -24,3 +31,21 @@
         @Body
     </main>
 </div>
+
+@code{
+    private string number;
+    protected override async Task OnInitializedAsync()
+    {
+        number = (await httpClient.GetFromJsonAsync<SaveUserPhoneNumberDTO>("/user/myphone")).MobileNumber;
+    }
+    public async Task SavePhoneNumber()
+    {
+        await httpClient.PostAsJsonAsync("/user/SavePhoneNumber", new SaveUserPhoneNumberDTO
+        {
+            MobileNumber = number,
+            ReceivePushNotifications = true
+        });
+        number = string.Empty;
+        number = (await httpClient.GetFromJsonAsync<SaveUserPhoneNumberDTO>("/user/myphone")).MobileNumber;
+    }
+}

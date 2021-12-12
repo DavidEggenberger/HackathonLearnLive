@@ -79,15 +79,20 @@ namespace WebAPI.Hubs
             GroupMessage message = appUser.SentMessages.Where(s => s.Id == messageDTO.Id).FirstOrDefault();
             appUser.SentMessages.Remove(message);
             await applicationDbContext.SaveChangesAsync();
-            await Clients.All.SendAsync("UpdateGroupMessages", messageDTO.GroupId);
+            await Clients.All.SendAsync("UpdateGroupMessages");
         }
 
         public async Task CreateLearningNote(LearningNoteDTO learningNoteDTO)
         {
-            ApplicationUser appUser = await userManager.FindByIdAsync(Context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            ApplicationUser appUser = applicationDbContext.Users.Include(s => s.LearningNotes).Where(uer => uer.Id == Context.User.FindFirst(ClaimTypes.NameIdentifier).Value).First();
             Group group = applicationDbContext.Groups.Include(s => s.Messages).ThenInclude(t => t.SenderApplicationUser).Where(group => group.Id == learningNoteDTO.GroupId).First();
-
-            await Clients.All.SendAsync("UpdateGroupMessages", learningNoteDTO.GroupId);
+            appUser.LearningNotes.Add(new LearningNote
+            {
+                Group = group,
+                LearningText = learningNoteDTO.LearningMessage
+            });
+            await applicationDbContext.SaveChangesAsync();
+            await Clients.All.SendAsync("UpdateGroupMessages");
         }
     }
 }

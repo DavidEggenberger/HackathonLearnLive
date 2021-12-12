@@ -26,6 +26,19 @@
         color: white;
         font-size: 20px;
     }
+    .message{
+        margin: 4px 0;
+    }
+    .LearningNote {
+        padding: 3px;
+        border: 2px solid white;
+        outline: none;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
 </style>
 
 
@@ -67,8 +80,80 @@
                         </NotAuthorized>
                     </AuthorizeView>
                 <div class="ChatContainer">
-                    <div style="display: grid; place-content: center;">
+                    <div style="padding: 5px; box-sizing: border-box;">
                         <h3>Chat with the group members and create learning notes</h3>
+                        <AuthorizeView>
+                            <Authorized>
+                                @if (messagesDTOs != null)
+                                {
+                                    @foreach (var message in messagesDTOs)
+                                    {
+                                        if (message.SenderUserName == context.User.Identity.Name)
+                                        {
+                                            <div class="message" style="display: flex; justify-content: space-between; width: 100%;">
+                                                @message.SenderUserName: @message.Content <h3 @onclick='async() => { await hubConnection.InvokeAsync("RemoveMessage", new MessagesDTO { Id = message.Id, GroupId = message.GroupId }); }' style="cursor: pointer;">Delete Message</h3>
+                                            </div>
+                                        }
+                                        else
+                                        {
+
+                                            <div class="message">
+                                                @message.SenderUserName: @message.Content
+                                            </div>
+
+                                        }
+                                    }
+                                }
+                                <div>
+                                    <input @bind="message" @bind:event="oninput" />
+                                    <h3 @onclick="async() => await SendMessage()" style="cursor: pointer;">Send Message</h3>
+                                </div>
+                                @if (learningNoteDTOs != null)
+                                {
+                                    <div class="LearningNote" style="margin-top: 25px;">
+                                        <h2>All created LearningNotes</h2>
+                                    </div>
+                                    <div class="LearningNotes" style="">
+                                        @foreach (var item in learningNoteDTOs)
+                                        {
+                                            <div class="LearningNote" style="margin-top: 15px;">
+                                                <h3>@item.LearningMessage</h3>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                <div>
+                                    <input @bind="learningMessage" @bind:event="oninput" />
+                                    <h3 @onclick="async() => await CreateLearningNote()" style="cursor: pointer;">Create a learning Note</h3>
+                                </div>
+                            </Authorized>
+                            <NotAuthorized>
+                                @if (messagesDTOs != null)
+                                {
+                                    @foreach (var message in messagesDTOs)
+                                    {
+                                        <div class="message">
+                                            @message.SenderUserName: @message.Content
+                                        </div>
+                                    }
+                                }
+                                @if (learningNoteDTOs != null)
+                                {
+                                    <div class="LearningNote" style="margin-top: 25px;">
+                                        <h2>All created LearningNotes</h2>
+                                    </div>
+                                    <div class="LearningNotes">
+                                        @foreach (var item in learningNoteDTOs)
+                                        {
+                                            <div class="LearningNote">
+                                                <h3>@item.LearningMessage</h3>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                <h3>Login to send messages, create learning notes and video chat</h3>
+                            </NotAuthorized>
+                        </AuthorizeView>
                     </div>
                 </div>
             </div>
@@ -91,6 +176,7 @@
     public HubConnection hubConnection { get; set; }
     [Parameter]
     public GroupDTO GroupDTO { get; set; }
+    private string message, learningMessage;
     private List<MessagesDTO> messagesDTOs;
     private List<LearningNoteDTO> learningNoteDTOs;
     private string activeCamera;
@@ -102,6 +188,7 @@
         hubConnection.On("UpdateGroupMessages", async () =>
         {
             await GetMessagesLearningNotes();
+            StateHasChanged();
         });
     }
 
@@ -110,6 +197,7 @@
         if(GroupDTO != null)
         {
             await GetMessagesLearningNotes();
+            StateHasChanged();
         }
     }
 
@@ -117,13 +205,11 @@
     {
         messagesDTOs = await httpClient.GetFromJsonAsync<List<MessagesDTO>>($"/api/group/MessagesForGroup/{GroupDTO?.Id}");
         learningNoteDTOs = await httpClient.GetFromJsonAsync<List<LearningNoteDTO>>($"/api/group/LearningNotesForGroup/{GroupDTO?.Id}");
-        StateHasChanged();
     }
 
     private async ValueTask OnLeaveRoom()
     {
         await videoJS.LeaveRoomAsync();
-        //await videoJS.StartVideoAsync(activeCamera, "#camera");
         isVideoChatting = false;
     }
 
@@ -148,5 +234,28 @@
     public async ValueTask DisposeAsync()
     {
         await OnLeaveRoom();
+    }
+
+    public async Task SendMessage()
+    {
+        await hubConnection.InvokeAsync("SendMessage", new MessagesDTO
+        {
+            Content = message,
+            GroupId = GroupDTO.Id
+        });
+        message = string.Empty;
+        await GetMessagesLearningNotes();
+        StateHasChanged();
+    }
+    public async Task CreateLearningNote()
+    {
+        await hubConnection.InvokeAsync("CreateLearningNote", new LearningNoteDTO
+        {
+            LearningMessage = learningMessage,
+            GroupId = GroupDTO.Id
+        });
+        learningMessage = string.Empty;
+        await GetMessagesLearningNotes();
+        StateHasChanged();
     }
 }

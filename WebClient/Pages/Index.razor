@@ -4,7 +4,7 @@
 
 <CascadingValue Value="hubConnection">
     <div class="IndexContainer">
-        <GroupsComponent ChosenGroup="group => currentlyChosenGroup = group" />
+        <GroupsComponent ChosenGroup="group => { currentlyChosenGroup = group; StateHasChanged(); }" />
         <VideoChatComponent GroupDTO="currentlyChosenGroup" />
     </div>
 </CascadingValue>

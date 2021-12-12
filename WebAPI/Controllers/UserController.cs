@@ -96,10 +96,23 @@ namespace WebAPI.Controllers
             {
                 return BFFUserInfoDTO.Anonymous;
             }
-            twilioService.SendMessage("hejo", "41793454087");
+
             return new BFFUserInfoDTO()
             {
                 Claims = User.Claims.Select(claim => new ClaimValueDTO { Type = claim.Type, Value = claim.Value }).ToList()
+            };
+        }
+        [HttpGet("myPhone")]
+        public async Task<SaveUserPhoneNumberDTO> GetMyPhoneNumber()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return new SaveUserPhoneNumberDTO() { MobileNumber = string.Empty };
+            }
+            ApplicationUser appUser = await userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            return new SaveUserPhoneNumberDTO
+            {
+                MobileNumber = appUser.MobileNumber
             };
         }
         [HttpPost("SavePhoneNumber")]

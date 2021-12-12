@@ -1,5 +1,6 @@
 ﻿using DTOs.Group;
 using DTOs.User;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,7 @@ namespace WebAPI.Controllers
             this.videoChatHub = videoChatHub;
             this.applicationDbContext = applicationDbContext;
         }
+        [Authorize]
         [HttpPost("CreateGroup")]
         public async Task<ActionResult> CreateGroup(GroupDTO groupDTO)
         {
@@ -110,16 +112,18 @@ namespace WebAPI.Controllers
         public async Task<List<MessagesDTO>> GetMessagesPerGroup(Guid groupId)
         {
             Group group = applicationDbContext.Groups.Include(s => s.Messages).ThenInclude(t => t.SenderApplicationUser).Where(group => group.Id == groupId).First();
-            return group.Messages.Select(m => new MessagesDTO
+            return group.Messages.ToList().Where(s => s.SenderApplicationUser != null).Select(m => new MessagesDTO
             {
                 Id = m.Id,
-                Content = m.TextMessage
+                Content = m.TextMessage,
+                GroupId = m.GroupId,
+                SenderUserName = m.SenderApplicationUser.UserName
             }).ToList();
         }
         [HttpGet("LearningNotesForGroup/{groupId}")]
         public async Task<List<LearningNoteDTO>> LearningNotesPerGroup(Guid groupId)
         {
-            Group group = applicationDbContext.Groups.Include(s => s.Messages).ThenInclude(t => t.SenderApplicationUser).Where(group => group.Id == groupId).First();
+            Group group = applicationDbContext.Groups.Include(s => s.LearningNotes).ThenInclude(t => t.ApplicationUser).Where(group => group.Id == groupId).First();
             return group.LearningNotes.Select(m => new LearningNoteDTO
             {
                 Id = m.Id,
