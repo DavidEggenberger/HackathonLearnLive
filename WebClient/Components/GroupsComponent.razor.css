@@ -3,7 +3,7 @@
     height: 100%;
     box-sizing: border-box;
     display: grid;
-    grid-template-rows: 30px 1fr;
+    grid-template-rows: 35px 1fr;
 }
 .DisplayGroupSection{
     display: flex;

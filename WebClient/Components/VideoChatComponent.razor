@@ -1,14 +1,19 @@
 ﻿@inject HttpClient httpClient
 @inject VideoJS videoJS
 @inject NavigationManager navigationManager
-
+@implements IAsyncDisposable 
+@inject IJSRuntime JSRuntime
 <style>
     #camera{
         position: relative;
     }
     #camera video{
-        height: 200px;
-        width: 200px;
+        width: 300px;
+    }
+    .CameraName{
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
     }
 </style>
 
@@ -16,25 +21,43 @@
 <div class="VideoChatComponentContainer">
     @if (GroupDTO == null)
     {
-        <h3>Please select a learning Group</h3>
+        <div class="GroupHeader">
+            <h3>Select a learning group to see its chat and video call</h3>
+        </div>
     }
     else
     {
-        <h3>@GroupDTO.Name</h3>
+        <div class="GroupHeader">
+            <h3>@GroupDTO.Name</h3>
+        </div>
     }
-    <CameraSelectorComponent CameraChanged="camera => activeCamera = camera" />
-    @if (!isVideoChatting)
+    @if (GroupDTO != null)
     {
-        <button @onclick="async () => await TryJoinRoomAsync(GroupDTO.Id.ToString())">Join Video Chat</button>
+        <div style="padding-top: 10px; box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 1fr 300px;">
+            <div style="height: 100%;">
+                <CameraSelectorComponent CameraChanged="camera => activeCamera = camera" />
+                @if (!isVideoChatting)
+                {
+                    <button @onclick="async () => await TryJoinRoomAsync(GroupDTO.Id.ToString())">Join Video Chat</button>
+                }
+                else
+                {
+                    <div id="muteAudio" @onclick='async() => await JSRuntime.InvokeVoidAsync("muteAudio")'><h5>Mute the Audio</h5></div>
+                    <div id="unmuteAudio"><h5>Unmute the Audio</h5></div>
+                    <button @onclick="async () => await OnLeaveRoom()">Leave Video Chat</button>
+                }
+            </div>
+            <div style="height: 100%;">
+                <div id="camera">
+                    @if (activeCamera != null)
+                    {
+                        <div class="CameraName">YourSelf</div>
+                    }
+                </div>
+                <div id="participants"></div>
+            </div>           
+        </div>     
     }
-    else
-    {
-        <button @onclick="async () => await OnLeaveRoom()">Leave Video Chat</button>
-    }
-    <div id="camera">
-        <div></div>
-    </div>
-    <div id="participants"></div>
 </div>
 
 
@@ -43,6 +66,7 @@
     public GroupDTO GroupDTO { get; set; }
     private List<MessagesDTO> messagesDTOs;
     private string activeCamera;
+    private bool muted;
     private bool isVideoChatting;
     protected override async Task OnParametersSetAsync()
     {
@@ -60,7 +84,8 @@
     private async ValueTask OnLeaveRoom()
     {
         await videoJS.LeaveRoomAsync();
-        await videoJS.StartVideoAsync(activeCamera, "#camera");
+        //await videoJS.StartVideoAsync(activeCamera, "#camera");
+        isVideoChatting = false;
     }
 
     private async ValueTask<bool> TryJoinRoomAsync(string roomName)
@@ -78,5 +103,10 @@
         }
 
         return joined;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await OnLeaveRoom();
     }
 }

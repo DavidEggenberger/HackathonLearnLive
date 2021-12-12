@@ -55,6 +55,31 @@ window.onload = function () {
         DotNet.invokeMethodAsync('WebClient', 'UpdateDevices');
     });
 }
+window.onbeforeunload = function () {
+    try {
+        if (_activeRoom) {
+            _activeRoom.disconnect();
+            _activeRoom = null;
+        }
+
+        if (_participants) {
+            _participants.clear();
+        }
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+function muteAudio() {
+        _activeRoom.localParticipant.audioTracks.forEach(track => {
+            track.disable();
+        });
+}
+
+function unmuteAudio() {
+
+}
 
 async function createOrJoinRoom(roomName, token) {
     try {
@@ -110,12 +135,17 @@ function remove(participant) {
 
 function loudest(participant) {
     _dominantSpeaker = participant;
+    console.log(9);
+    Array.from(document.querySelectorAll('.loudest')).forEach(function (el) {
+        el.classList.remove('loudest');
+    });
+    document.querySelectorAll('[identity="${participant.identity}"]')?.classList.add('loudest');
 }
 
 function registerParticipantEvents(participant) {
     if (participant) {
-        participant.tracks.forEach(publication => subscribe(publication));
-        participant.on('trackPublished', publication => subscribe(publication));
+        participant.tracks.forEach(publication => subscribe(publication, participant));
+        participant.on('trackPublished', publication => subscribe(publication, participant));
         participant.on('trackUnpublished',
             publication => {
                 if (publication && publication.track) {
@@ -125,14 +155,14 @@ function registerParticipantEvents(participant) {
     }
 }
 
-function subscribe(publication) {
+function subscribe(publication, participant) {
     if (isMemberDefined(publication, 'on')) {
-        publication.on('subscribed', track => attachTrack(track));
+        publication.on('subscribed', track => attachTrack(track, participant));
         publication.on('unsubscribed', track => detachTrack(track));
     }
 }
 
-function attachTrack(track) {
+function attachTrack(track, participant) {
     if (isMemberDefined(track, 'attach')) {
         const audioOrVideo = track.attach();
         audioOrVideo.id = track.sid;
@@ -145,6 +175,13 @@ function attachTrack(track) {
             const responsiveItem = document.createElement('div');
             responsiveItem.classList.add('embed-responsive-item');
 
+            responsiveItem.setAttribute('identity', participant.identity);
+
+            const userName = document.createElement('div');
+            userName.innerHTML = participant.identity;
+            userName.classList.add('name');
+
+            responsiveItem.appendChild(userName);
             responsiveItem.appendChild(audioOrVideo);
             responsiveDiv.appendChild(responsiveItem);
             document.getElementById('participants').appendChild(responsiveDiv);

@@ -6,3 +6,13 @@
     height: 200px;
     width: 200px;
 }
+.GroupHeader {
+    height: 35px;
+    width: 100%;
+    padding: 3px;
+    border: 2px solid white;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.3);
+    display: grid;
+    place-content: center;
+}

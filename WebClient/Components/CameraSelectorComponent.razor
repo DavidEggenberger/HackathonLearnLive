@@ -1,4 +1,19 @@
-﻿<select @onchange="async(value) => await SelectCamera((string)value.Value)">
+﻿<style>
+    select{
+        padding: 3px;
+        border: 2px solid white;
+        outline: none;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.3);
+        color: white;
+        font-size: 20px;
+    }
+    option{
+        color: black;
+    }
+</style>
+
+<select @onchange="async(value) => await SelectCamera((string)value.Value)">
     @if (HasCameras)
     {
         <option>Select a camera</option>
