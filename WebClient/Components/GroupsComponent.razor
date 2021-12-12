@@ -1,5 +1,5 @@
 ﻿@inject HttpClient httpClient
-
+@inject AuthenticationStateProvider authProvider
 
 <div class="OnlineUsersComponentContainer">
     <div class="GroupHeader">
@@ -7,6 +7,33 @@
     </div>
     <div class="MainSection">
         <div class="DisplayGroupSection">
+            <div class="group" style="width: 230px;">
+                <div style="width: 100%; display: grid; place-content: center;">
+                    <h3>Create a new group</h3>
+                </div>
+                <label>Name:</label>
+                <div style="width: 100%; display: grid; place-content: center;">
+                    <input @bind="groupname" @bind:event="oninput" />
+                </div>
+                <label>Purpose:</label>
+                <div style="width: 100%; display: grid; place-content: center;">
+                    <input @bind="purpose" @bind:event="oninput" />
+                </div>
+                <label>Image URI:</label>
+                <div style="width: 100%; display: grid; place-content: center;">
+                    <input @bind="imageURI" @bind:event="oninput" />
+                </div>
+                <div style="width: 100%; display: grid; place-content: center; height: 25px;">
+                    <AuthorizeView>
+                        <Authorized>
+                            <button @onclick="async() => await CreateGroupAsync()">Create Group</button>
+                        </Authorized>
+                        <NotAuthorized>
+                            <button @onclick="() => ((HostAuthenticationStateProvider)authProvider).SignIn()">Login to create a group</button>
+                        </NotAuthorized>
+                    </AuthorizeView>
+                </div>
+            </div>
             @if (groups?.Count > 0)
             {
                 foreach (var group in groups)
@@ -27,14 +54,8 @@
                 }
             }
         </div>
-        <div class="ManageGroupSection">
-            <div>
-                
-            </div>
-        </div>
     </div>
 </div>
-
 
 @code{
     [Parameter]
@@ -42,6 +63,7 @@
     [CascadingParameter]
     public HubConnection hubConnection { get; set; }
 
+    private string groupname, purpose, imageURI;
     private List<GroupDTO> groups;
     protected override async Task OnInitializedAsync()
     {
@@ -52,6 +74,16 @@
         {
             groups = await httpClient.GetFromJsonAsync<List<GroupDTO>>("/api/group/GetAllGroups");
             StateHasChanged();
+        });
+    }
+
+    public async Task CreateGroupAsync()
+    {
+        await httpClient.PostAsJsonAsync<GroupDTO>("/api/group/CreateGroup", new GroupDTO
+        {
+            Purpose = purpose,
+            Name = groupname,
+            PictureURI = imageURI
         });
     }
 }

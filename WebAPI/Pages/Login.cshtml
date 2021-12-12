@@ -4,13 +4,13 @@
 @{
 }
 
-<div class="LoginForm">
-    <main>
+<div class="LoginForm" style="height: 100%; width: 100%; display: grid; place-content: center;">
+    <div>
         <h3>Choose a social log-in:</h3>
         @{
             var providers = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             <form asp-route-returnurl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                <div>
+                <div style="display: flex; justify-content: space-evenly;">
                     @foreach (var provider in providers)
                     {
                         <button class="socialLoginButton" type="submit" value="@provider.Name" name="provider">@provider.Name</button>
@@ -18,5 +18,5 @@
                 </div>
             </form>
         }
-    </main>
+    </div> 
 </div>

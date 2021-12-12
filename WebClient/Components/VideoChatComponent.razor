@@ -42,10 +42,11 @@
                 }
                 else
                 {
-                    <div id="muteAudio" @onclick='async() => await JSRuntime.InvokeVoidAsync("muteAudio")'><h5>Mute the Audio</h5></div>
-                    <div id="unmuteAudio"><h5>Unmute the Audio</h5></div>
                     <button @onclick="async () => await OnLeaveRoom()">Leave Video Chat</button>
                 }
+                <div class="ChatContainer">
+
+                </div>
             </div>
             <div style="height: 100%;">
                 <div id="camera">
