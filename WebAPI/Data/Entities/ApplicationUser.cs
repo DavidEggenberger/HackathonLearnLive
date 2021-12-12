@@ -13,5 +13,6 @@ namespace WebAPI.Data.Entities
         public bool IsInCall { get; set; }
         public List<ApplicationUserGroupMembership> JoinedGroups { get; set; }
         public List<GroupMessage> SentMessages { get; set; }
+        public List<LearningNote> LearningNotes { get; set; }
     }
 }

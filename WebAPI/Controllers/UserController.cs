@@ -1,10 +1,12 @@
-﻿using DTOs.User;
+﻿using DTOs.Group;
+using DTOs.User;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -104,8 +106,19 @@ namespace WebAPI.Controllers
         {
             ApplicationUser appUser = await userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             appUser.MobileNumber = phoneNumber.MobileNumber;
+            appUser.MobilePushNotifications = phoneNumber.ReceivePushNotifications;
             await userManager.UpdateAsync(appUser);
             return Ok();
+        }
+        [HttpGet("GetAllLearningNotes")]
+        public async Task<List<LearningNoteDTO>> GetAllLearningNotes()
+        {
+            ApplicationUser appUser = await userManager.FindByIdAsync(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            return applicationDbContext.Users.Include(user => user.LearningNotes).First(s => s.Id == appUser.Id).LearningNotes.Select(s => new LearningNoteDTO
+            {
+                Message = s.LearningText,
+                GroupName = s.Group.Name
+            }).ToList();
         }
     }
 }

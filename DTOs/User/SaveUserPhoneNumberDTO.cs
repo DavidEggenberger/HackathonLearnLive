@@ -8,6 +8,7 @@ namespace DTOs.User
 {
     public class SaveUserPhoneNumberDTO
     {
+        public bool ReceivePushNotifications { get; set; }
         public string MobileNumber { get; set; }
     }
 }
