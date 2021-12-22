@@ -1,6 +1,8 @@
 # HackathonLearnLive
 
 [![SC2 Video](https://raw.githubusercontent.com/DavidEggenberger/HackathonLearnLive/master/LearnLive.PNG)](https://youtu.be/jq-n3eMEs_M "Click to Watch a walkthrough")
+Click on the screenshot to see a walkthrough on YouTube.
+
 
 <h3>What does it do?</h3>
 
